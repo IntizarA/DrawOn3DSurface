@@ -105,8 +105,6 @@ public class SurfaceController : MonoBehaviour
 
 		if (Input.GetKeyDown (KeyCode.S))
 		{
-			Debug.Log ("Enter clicked");
-
 			Texture texture = GetComponent<MeshRenderer> ().material.mainTexture;
 
 			RenderTexture renderTexture = texture as RenderTexture;
@@ -117,7 +115,6 @@ public class SurfaceController : MonoBehaviour
 
 			if (renderTexture == null)
 				return;
-			// Convert RenderTexture to Texture2D
 			RenderTexture.active = renderTexture;
 			texture2D = new Texture2D (renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
 			texture2D.ReadPixels (new Rect (0, 0, renderTexture.width, renderTexture.height), 0, 0);
@@ -151,7 +148,8 @@ public class SurfaceController : MonoBehaviour
 
 	private RenderTexture LoadFromFile ()
 	{
-		string filePath = Path.Combine (Application.persistentDataPath, "savedTexture.png");
+		
+		string filePath = Path.Combine (Application.persistentDataPath, $"{gameObject.GetInstanceID ()}.png");
 		if (!File.Exists (filePath))
 		{
 			Debug.LogError ($"File not found at {filePath}");
@@ -160,7 +158,7 @@ public class SurfaceController : MonoBehaviour
 
 		byte[] fileData = File.ReadAllBytes (filePath);
 
-		Texture2D texture = new Texture2D (2, 2, TextureFormat.RGBA32, false);
+		Texture2D texture = new Texture2D (2, 2, TextureFormat.RGBA32, false,true);
 
 		if (texture.LoadImage (fileData))
 		{
@@ -183,7 +181,7 @@ public class SurfaceController : MonoBehaviour
 	private void SaveTextureOnDisk (Texture2D texture2D)
 	{
 		byte[] bytes = texture2D.EncodeToPNG ();
-		string fullPath = Path.Combine (Application.persistentDataPath, "savedTexture.png");
+		string fullPath = Path.Combine (Application.persistentDataPath, $"{gameObject.GetInstanceID ()}.png");
 		File.WriteAllBytes (fullPath, bytes);
 
 		Debug.Log ($"RenderTexture saved to {fullPath}");
