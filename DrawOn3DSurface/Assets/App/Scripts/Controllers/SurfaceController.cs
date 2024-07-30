@@ -101,6 +101,8 @@ public class SurfaceController : MonoBehaviour
 
 	void Update ()
 	{
+		#region Test
+
 		if (Input.GetKeyDown (KeyCode.S))
 		{
 			Debug.Log ("Enter clicked");
@@ -126,13 +128,18 @@ public class SurfaceController : MonoBehaviour
 
 		if (Input.GetKeyDown (KeyCode.L))
 		{
-			Texture texture = LoadFromFile ();
-			if (texture != null)
-			{
-				GetComponent<Renderer> ().material.mainTexture = texture;
+			RenderTexture renderTexture = LoadFromFile ();
 
+			if (renderTexture != null)
+			{
+				GetComponent<Renderer> ().material.mainTexture = renderTexture;
+				SetMaterial ();
+				SetTexture ();
+				SetRenderTexture ();
 			}
 		}
+
+		#endregion
 	}
 
 	void OnDestroy ()
@@ -142,27 +149,28 @@ public class SurfaceController : MonoBehaviour
 
 	#endregion
 
-	private Texture LoadFromFile ()
+	private RenderTexture LoadFromFile ()
 	{
 		string filePath = Path.Combine (Application.persistentDataPath, "savedTexture.png");
-		// Check if the file exists
 		if (!File.Exists (filePath))
 		{
 			Debug.LogError ($"File not found at {filePath}");
 			return null;
 		}
 
-		// Read the image file into a byte array
 		byte[] fileData = File.ReadAllBytes (filePath);
 
-		// Create a new Texture2D (dummy size, will be resized by LoadImage)
 		Texture2D texture = new Texture2D (2, 2, TextureFormat.RGBA32, false);
 
-		// Load image data into the texture
 		if (texture.LoadImage (fileData))
 		{
 			Debug.Log ("Texture loaded successfully.");
-			return texture;
+
+			RenderTexture renderTexture = new RenderTexture (texture.width, texture.height, 0);
+
+			Graphics.Blit (texture, renderTexture);
+
+			return renderTexture;
 		}
 		else
 		{
