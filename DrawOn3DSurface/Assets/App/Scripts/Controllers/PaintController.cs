@@ -8,20 +8,27 @@ namespace DrawOn3DSurface.Controllers
 	public class PaintController : MonoBehaviour
 	{
 		public BrushController brush;
-		private bool isErasing;
+		private bool isErase;
 
 		#region Unity Methods
 
 		void OnEnable ()
 		{
-			EventManager.Instance.AddListener <OnChangeColorEvent>(OnChangeColorEventHandler);
-			EventManager.Instance.AddListener <OnPaintToolChangeEvent>(OnPaintToolChangeEventHandler);
+			EventManager.Instance.AddListener<OnChangeColorEvent> (OnChangeColorEventHandler);
+			EventManager.Instance.AddListener<OnPaintToolChangeEvent> (OnPaintToolChangeEventHandler);
+			EventManager.Instance.AddListener<OnValueUpdateEvent> (OnValueUpdateEventHandler);
 		}
 
 		void OnDisable ()
 		{
-			EventManager.Instance.RemoveListener <OnChangeColorEvent>(OnChangeColorEventHandler);
-			EventManager.Instance.RemoveListener <OnPaintToolChangeEvent>(OnPaintToolChangeEventHandler);
+			EventManager.Instance.RemoveListener<OnChangeColorEvent> (OnChangeColorEventHandler);
+			EventManager.Instance.RemoveListener<OnPaintToolChangeEvent> (OnPaintToolChangeEventHandler);
+			EventManager.Instance.RemoveListener<OnValueUpdateEvent> (OnValueUpdateEventHandler);
+		}
+
+		void Start ()
+		{
+			EventManager.Instance.Raise (new OnValueUpdateEvent (brush.Size));
 		}
 
 		void Update ()
@@ -37,7 +44,7 @@ namespace DrawOn3DSurface.Controllers
 					var paintObject = hitInfo.transform.GetComponent<SurfaceController> ();
 					if (paintObject == null)
 						return;
-					if (isErasing)
+					if (isErase)
 					{
 						paintObject.Erase (brush, hitInfo);
 					}
@@ -48,6 +55,7 @@ namespace DrawOn3DSurface.Controllers
 				}
 			}
 		}
+
 		#endregion
 
 		#region Event Handlers
@@ -59,7 +67,12 @@ namespace DrawOn3DSurface.Controllers
 
 		private void OnPaintToolChangeEventHandler (OnPaintToolChangeEvent eventDetails)
 		{
-			isErasing = eventDetails.ToolType == PaintToolType.Eraser;
+			isErase = eventDetails.ToolType == PaintToolType.Eraser;
+		}
+
+		private void OnValueUpdateEventHandler (OnValueUpdateEvent eventDetails)
+		{
+			brush.Size = eventDetails.BrushSize;
 		}
 
 		#endregion

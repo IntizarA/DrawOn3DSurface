@@ -10,6 +10,20 @@ namespace DrawOn3DSurface.UI.ViewControllers
 	{
 		[SerializeField] private SettingsView view;
 
+		#region Unity Methods
+
+		void OnEnable ()
+		{
+			EventManager.Instance.AddListener<OnValueUpdateEvent> (OnValueUpdateEventHandler);
+		}
+
+		void OnDisable ()
+		{
+			EventManager.Instance.RemoveListener<OnValueUpdateEvent> (OnValueUpdateEventHandler);
+		}
+
+		#endregion
+		
 		public void OnSettingsButtonClicked ()
 		{
 			view.gameObject.SetActive (true);
@@ -37,7 +51,17 @@ namespace DrawOn3DSurface.UI.ViewControllers
 
 		public void OnPaintToolChange (bool isEraser)
 		{
-			EventManager.Instance.Raise (new OnPaintToolChangeEvent (isEraser?PaintToolType.Eraser:PaintToolType.Brush));
+			EventManager.Instance.Raise (new OnPaintToolChangeEvent (isEraser ? PaintToolType.Eraser : PaintToolType.Brush));
 		}
+
+
+		#region Event Handlers
+		
+		private void OnValueUpdateEventHandler (OnValueUpdateEvent eventDetails)
+		{
+			view.Slider.SliderValue = eventDetails.BrushSize;
+		}
+
+		#endregion
 	}
 }

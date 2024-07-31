@@ -35,7 +35,7 @@ namespace DrawOn3DSurface.Controllers
 		}
 
 
-		public float Scale
+		public float Size
 		{
 			get { return Mathf.Clamp01 (brushScale); }
 			set { brushScale = Mathf.Clamp01 (value); }
@@ -53,10 +53,10 @@ namespace DrawOn3DSurface.Controllers
 			set { colorBlendType = value; }
 		}
 
-		public BrushController (Texture brushTex, float scale, Color color)
+		public BrushController (Texture brushTex, float size, Color color)
 		{
 			BrushTexture = brushTex;
-			Scale = scale;
+			Size = size;
 			Color = color;
 		}
 		public object Clone ()

@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28e7fca161c6330499b5cefedd1d1237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slider: {fileID: 6433305945887506780}
 --- !u!1 &5529619114612484599
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.392}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.19607843}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -482,6 +483,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fdd86828b82ea54c96187f57a42bbd3, type: 3}
+--- !u!114 &6433305945887506780 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6208158106620489036, guid: 7fdd86828b82ea54c96187f57a42bbd3, type: 3}
+  m_PrefabInstance: {fileID: 1108025472368503824}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f64ded61209a594886168b4c7135915, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &7651787347282528497 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7300584888992883937, guid: 7fdd86828b82ea54c96187f57a42bbd3, type: 3}

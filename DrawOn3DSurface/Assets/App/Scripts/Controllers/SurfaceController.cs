@@ -87,9 +87,16 @@ namespace DrawOn3DSurface.Controllers
 			EventManager.Instance.RemoveListener<OnClearAllEvent> (OnClearAllEventHandler);
 		}
 
+		void Awake ()
+		{
+			InitPropertyID ();
+			SetMaterial ();
+			SetTexture ();
+		}
+
 		void Start ()
 		{
-			EventManager.Instance.Raise (new OnFileOperationEvent (FileOperationType.Load));
+			SetRenderTexture ();
 		}
 
 		void OnDestroy ()
@@ -181,7 +188,7 @@ namespace DrawOn3DSurface.Controllers
 		{
 			paintMainMaterial.SetVector (paintUVPropertyID, uv);
 			paintMainMaterial.SetTexture (brushTexturePropertyID, brush.BrushTexture);
-			paintMainMaterial.SetFloat (brushScalePropertyID, brush.Scale);
+			paintMainMaterial.SetFloat (brushScalePropertyID, brush.Size);
 			paintMainMaterial.SetVector (brushColorPropertyID, brush.Color);
 
 			foreach (var key in paintMainMaterial.shaderKeywords)
@@ -244,7 +251,7 @@ namespace DrawOn3DSurface.Controllers
 			if (useMainPaint)
 			{
 				var rt = RenderTexture.GetTemporary (brush.BrushTexture.width, brush.BrushTexture.height);
-				GrabArea.Clip (brush.BrushTexture, brush.Scale, paintSet.mainTexture, uv, GrabArea.GrabTextureWrapMode.Clamp,
+				GrabArea.Clip (brush.BrushTexture, brush.Size, paintSet.mainTexture, uv, GrabArea.GrabTextureWrapMode.Clamp,
 					rt);
 				brushClone.BrushTexture = rt;
 			}
@@ -296,10 +303,7 @@ namespace DrawOn3DSurface.Controllers
 			}
 			else
 			{
-				InitPropertyID ();
-				SetMaterial ();
-				SetTexture ();
-				SetRenderTexture ();
+				
 			}
 		}
 
