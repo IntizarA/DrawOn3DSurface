@@ -1,18 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
+using DrawOn3DSurface.Enums;
+using DrawOn3DSurface.Events;
+using DrawOn3DSurface.UI.Views;
+using DynamicBox.EventManagement;
 using UnityEngine;
 
-public class SettingsViewController : MonoBehaviour
+namespace DrawOn3DSurface.UI.ViewControllers
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	public class SettingsViewController : MonoBehaviour
+	{
+		[SerializeField] private SettingsView view;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+		public void OnSettingsButtonClicked ()
+		{
+			view.gameObject.SetActive (true);
+		}
+
+		public void OnClearAllClicked ()
+		{
+			EventManager.Instance.Raise (new OnClearAllEvent ());
+		}
+
+		public void OnSaveToFileClicked ()
+		{
+			EventManager.Instance.Raise (new OnFileOperationEvent (FileOperationType.Save));
+		}
+
+		public void OnLoadFromFileClicked ()
+		{
+			EventManager.Instance.Raise (new OnFileOperationEvent (FileOperationType.Load));
+		}
+
+		public void OnCloseButtonClicked ()
+		{
+			view.gameObject.SetActive (false);
+		}
+	}
 }

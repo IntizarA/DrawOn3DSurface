@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using DrawOn3DSurface.Enums;
 using DrawOn3DSurface.Controllers;
+using DrawOn3DSurface.Events;
+using DynamicBox.EventManagement;
 using UnityEngine;
 
 [RequireComponent (typeof (Renderer))]
@@ -82,6 +84,7 @@ public class SurfaceController : MonoBehaviour
 	void Start ()
 	{
 		SetRenderTexture ();
+		EventManager.Instance.Raise (new OnFileOperationEvent (FileOperationType.Load));
 	}
 
 	void Update ()
