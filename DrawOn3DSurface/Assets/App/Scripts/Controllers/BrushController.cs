@@ -10,9 +10,6 @@ namespace DrawOn3DSurface.Controllers
 		[SerializeField]
 		private Texture brushTexture;
 
-		[SerializeField]
-		private Texture brushNormalTexture;
-
 		[SerializeField, Range (0, 1)]
 		private float brushScale = 0.1f;
 
@@ -27,13 +24,6 @@ namespace DrawOn3DSurface.Controllers
 			get { return brushTexture; }
 			set { brushTexture = value; }
 		}
-
-		public Texture BrushNormalTexture
-		{
-			get { return brushNormalTexture; }
-			set { brushNormalTexture = value; }
-		}
-
 
 		public float Size
 		{
@@ -59,6 +49,7 @@ namespace DrawOn3DSurface.Controllers
 			Size = size;
 			Color = color;
 		}
+		
 		public object Clone ()
 		{
 			return MemberwiseClone ();

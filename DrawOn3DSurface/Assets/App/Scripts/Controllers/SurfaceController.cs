@@ -69,10 +69,6 @@ namespace DrawOn3DSurface.Controllers
 
 		private const string COLOR_BLEND_USE_BRUSH = "INK_PAINTER_COLOR_BLEND_USE_BRUSH";
 
-		//erase
-		private const string DXT5NM_COMPRESS_USE = "DXT5NM_COMPRESS_USE";
-		private const string DXT5NM_COMPRESS_UNUSE = "DXT5NM_COMPRESS_UNUSE";
-
 		#region Unity Methods
 
 		void OnEnable ()

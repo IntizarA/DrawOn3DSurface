@@ -1,69 +1,74 @@
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+namespace DrawOn3DSurface.Controllers
 {
-    [Header("Movement Settings")]
-    public float moveSpeed = 5f;
-    public float smoothTime = 0.1f;
+	public class CameraController : MonoBehaviour
+	{
+		[Header ("Movement Settings")]
+		public float moveSpeed = 5f;
 
-    [Header("Mouse Settings")]
-    public float mouseSensitivity = 100f;
-    public bool invertY = false;
+		public float smoothTime = 0.1f;
 
-    private Vector3 velocity = Vector3.zero;
-    private Vector3 targetPosition;
-    private float targetYaw;
-    private float targetPitch;
+		[Header ("Mouse Settings")]
+		public float mouseSensitivity = 100f;
 
-    private void Start()
-    {
-        targetPosition = transform.position;
-        targetYaw = transform.eulerAngles.y;
-        targetPitch = transform.eulerAngles.x;
-    }
+		public bool invertY = false;
 
-    private void Update()
-    {
-        HandleMovement();
+		private Vector3 velocity = Vector3.zero;
+		private Vector3 targetPosition;
+		private float targetYaw;
+		private float targetPitch;
 
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-        {
-            HandleMouseRotation();
-        }
+		private void Start ()
+		{
+			targetPosition = transform.position;
+			targetYaw = transform.eulerAngles.y;
+			targetPitch = transform.eulerAngles.x;
+		}
 
-        SmoothMovement();
-    }
+		private void Update ()
+		{
+			HandleMovement ();
 
-    private void HandleMovement()
-    {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+			if (Input.GetKey (KeyCode.LeftShift) || Input.GetKey (KeyCode.RightShift))
+			{
+				HandleMouseRotation ();
+			}
 
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+			SmoothMovement ();
+		}
 
-        Vector3 moveDirection = transform.TransformDirection(direction);
-        targetPosition += moveDirection * moveSpeed * Time.deltaTime;
-    }
+		private void HandleMovement ()
+		{
+			float horizontal = Input.GetAxis ("Horizontal");
+			float vertical = Input.GetAxis ("Vertical");
 
-    private void HandleMouseRotation()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+			Vector3 direction = new Vector3 (horizontal, 0f, vertical).normalized;
 
-        if (invertY)
-        {
-            mouseY = -mouseY;
-        }
+			Vector3 moveDirection = transform.TransformDirection (direction);
+			targetPosition += moveDirection * moveSpeed * Time.deltaTime;
+		}
 
-        targetYaw += mouseX;
-        targetPitch -= mouseY;
+		private void HandleMouseRotation ()
+		{
+			float mouseX = Input.GetAxis ("Mouse X") * mouseSensitivity * Time.deltaTime;
+			float mouseY = Input.GetAxis ("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        targetPitch = Mathf.Clamp(targetPitch, -90f, 90f);
-    }
+			if (invertY)
+			{
+				mouseY = -mouseY;
+			}
 
-    private void SmoothMovement()
-    {
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
-        transform.rotation = Quaternion.Euler(targetPitch, targetYaw, 0f);
-    }
+			targetYaw += mouseX;
+			targetPitch -= mouseY;
+
+			targetPitch = Mathf.Clamp (targetPitch, -90f, 90f);
+		}
+
+		private void SmoothMovement ()
+		{
+			transform.position = Vector3.SmoothDamp (transform.position, targetPosition, ref velocity, smoothTime);
+			transform.rotation = Quaternion.Euler (targetPitch, targetYaw, 0f);
+		}
+	}
 }
