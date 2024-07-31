@@ -327,5 +327,20 @@ public class SurfaceController : MonoBehaviour
 		}
 		return brushClone;
 	}
+
+	#region Event Handlers
+
+	private void OnFileOperationEvent (OnFileOperationEvent eventDetails)
+	{
+		switch (eventDetails.OperationType)
+		{
+			case FileOperationType.Save:
+				break;
+			case FileOperationType.Load:
+				break;
+		}
+	}
+
+	#endregion
 	
 }
