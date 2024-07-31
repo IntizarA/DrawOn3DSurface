@@ -141,6 +141,11 @@ public class SurfaceController : MonoBehaviour
 			}
 		}
 
+		if (Input.GetKeyDown (KeyCode.R))
+		{
+			FullyClear ();
+		}
+
 		#endregion
 	}
 
@@ -150,6 +155,10 @@ public class SurfaceController : MonoBehaviour
 	}
 
 	#endregion
+
+	private void FullyClear ()
+	{
+	}
 
 	private RenderTexture LoadFromFile ()
 	{
