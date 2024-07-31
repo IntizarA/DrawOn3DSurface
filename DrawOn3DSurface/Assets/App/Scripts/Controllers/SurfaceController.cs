@@ -28,7 +28,7 @@ public class SurfaceController : MonoBehaviour
 
 		[SerializeField, Tooltip ("Whether or not use normal map paint (you need material on normal maps).")]
 		public bool useNormalPaint = false;
-
+		
 		[HideInInspector]
 		[NonSerialized]
 		public Texture mainTexture;
@@ -74,6 +74,8 @@ public class SurfaceController : MonoBehaviour
 
 	private static Material paintMainMaterial = null;
 	private static Material paintNormalMaterial = null;
+	
+	[SerializeField] private Texture cleanTexture;
 
 	[SerializeField] private List<PaintSet> paintSet = null;
 
@@ -158,6 +160,10 @@ public class SurfaceController : MonoBehaviour
 
 	private void FullyClear ()
 	{
+		GetComponent<Renderer> ().material.mainTexture = cleanTexture;
+		SetMaterial ();
+		SetTexture ();
+		SetRenderTexture ();
 	}
 
 	private RenderTexture LoadFromFile ()
