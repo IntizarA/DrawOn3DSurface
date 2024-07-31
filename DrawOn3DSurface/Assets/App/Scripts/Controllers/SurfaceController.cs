@@ -82,8 +82,13 @@ public class SurfaceController : MonoBehaviour
 	private int brushScalePropertyID;
 	private int brushColorPropertyID;
 	private int brushNormalTexturePropertyID;
+	private bool eraseFlag = false;
 
 	private const string COLOR_BLEND_USE_BRUSH = "INK_PAINTER_COLOR_BLEND_USE_BRUSH";
+	
+	//erase
+	private const string DXT5NM_COMPRESS_USE = "DXT5NM_COMPRESS_USE";
+	private const string DXT5NM_COMPRESS_UNUSE = "DXT5NM_COMPRESS_UNUSE";
 
 	#region Unity Methods
 
@@ -148,7 +153,6 @@ public class SurfaceController : MonoBehaviour
 
 	private RenderTexture LoadFromFile ()
 	{
-		
 		string filePath = Path.Combine (Application.persistentDataPath, $"{gameObject.GetInstanceID ()}.png");
 		if (!File.Exists (filePath))
 		{
@@ -158,7 +162,7 @@ public class SurfaceController : MonoBehaviour
 
 		byte[] fileData = File.ReadAllBytes (filePath);
 
-		Texture2D texture = new Texture2D (2, 2, TextureFormat.RGBA32, false,true);
+		Texture2D texture = new Texture2D (2, 2, TextureFormat.RGBA32, false, true);
 
 		if (texture.LoadImage (fileData))
 		{
@@ -295,8 +299,9 @@ public class SurfaceController : MonoBehaviour
 		{
 			bool mainPaintConditions = paint.useMainPaint && brush.BrushTexture != null && paint.paintMainTexture != null &&
 			                           paint.paintMainTexture.IsCreated ();
-			bool normalPaintConditions = paint.useNormalPaint && brush.BrushNormalTexture != null &&
-			                             paint.paintNormalTexture != null && paint.paintNormalTexture.IsCreated ();
+			if (eraseFlag)
+				brush = GetEraser (brush,paint, uv,mainPaintConditions);
+
 
 			if (mainPaintConditions)
 			{
@@ -308,16 +313,8 @@ public class SurfaceController : MonoBehaviour
 				RenderTexture.ReleaseTemporary (mainPaintTextureBuffer);
 			}
 
-			if (normalPaintConditions)
-			{
-				var normalPaintTextureBuffer = RenderTexture.GetTemporary (paint.paintNormalTexture.width,
-					paint.paintNormalTexture.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
-				Graphics.Blit (paint.paintNormalTexture, normalPaintTextureBuffer, paintNormalMaterial);
-				Graphics.Blit (normalPaintTextureBuffer, paint.paintNormalTexture);
-				RenderTexture.ReleaseTemporary (normalPaintTextureBuffer);
-			}
 		}
-
+		eraseFlag = false;
 		return true;
 	}
 
@@ -331,4 +328,26 @@ public class SurfaceController : MonoBehaviour
 
 		return false;
 	}
+
+	public bool Erase (BrushController brush, RaycastHit hitInfo, Func<PaintSet, bool> materialSelector = null)
+	{
+		eraseFlag = true;
+		return Paint (brush, hitInfo, materialSelector);
+	}
+
+	private BrushController GetEraser (BrushController brush, PaintSet paintSet,Vector2 uv, bool useMainPaint)
+	{
+		BrushController brushClone = brush.Clone () as BrushController;
+		brushClone.Color = Color.white;
+		brushClone.ColorBlending = ColorBlendType.UseBrush;
+
+		if (useMainPaint)
+		{
+			var rt = RenderTexture.GetTemporary (brush.BrushTexture.width, brush.BrushTexture.height);
+			GrabArea.Clip(brush.BrushTexture, brush.Scale, paintSet.mainTexture, uv, GrabArea.GrabTextureWrapMode.Clamp, rt);
+			brushClone.BrushTexture = rt;
+		}
+		return brushClone;
+	}
+	
 }

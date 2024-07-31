@@ -5,9 +5,12 @@ namespace DrawOn3DSurface.Controllers
 	public class MousePaintController : MonoBehaviour
 	{
 		public BrushController brush;
+		public bool isErasing;
 
 		void Update ()
 		{
+			if (Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl))
+				return;
 			if (Input.GetMouseButton (0))
 			{
 				var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -17,8 +20,14 @@ namespace DrawOn3DSurface.Controllers
 					var paintObject = hitInfo.transform.GetComponent<SurfaceController> ();
 					if (paintObject == null)
 						return;
-
-					paintObject.Paint (brush, hitInfo);
+					if (isErasing)
+					{
+						paintObject.Erase (brush, hitInfo);
+					}
+					else
+					{
+						paintObject.Paint (brush, hitInfo);
+					}
 				}
 			}
 		}
