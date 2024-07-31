@@ -34,5 +34,10 @@ namespace DrawOn3DSurface.UI.ViewControllers
 		{
 			view.gameObject.SetActive (false);
 		}
+
+		public void OnPaintToolChange (bool isEraser)
+		{
+			EventManager.Instance.Raise (new OnPaintToolChangeEvent (isEraser?PaintToolType.Eraser:PaintToolType.Brush));
+		}
 	}
 }

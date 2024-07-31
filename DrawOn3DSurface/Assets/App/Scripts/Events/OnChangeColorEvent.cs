@@ -1,12 +1,15 @@
 using DynamicBox.EventManagement;
 using UnityEngine;
 
-public class OnChangeColorEvent : GameEvent
+namespace DrawOn3DSurface.Events
 {
-	public readonly Color Color;
-
-	public OnChangeColorEvent (Color color)
+	public class OnChangeColorEvent : GameEvent
 	{
-		Color = color;
+		public readonly Color Color;
+
+		public OnChangeColorEvent (Color color)
+		{
+			Color = color;
+		}
 	}
 }

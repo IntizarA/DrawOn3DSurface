@@ -1,3 +1,5 @@
+using DrawOn3DSurface.Enums;
+using DrawOn3DSurface.Events;
 using DynamicBox.EventManagement;
 using UnityEngine;
 
@@ -6,18 +8,20 @@ namespace DrawOn3DSurface.Controllers
 	public class PaintController : MonoBehaviour
 	{
 		public BrushController brush;
-		public bool isErasing;
+		private bool isErasing;
 
 		#region Unity Methods
 
 		void OnEnable ()
 		{
 			EventManager.Instance.AddListener <OnChangeColorEvent>(OnChangeColorEventHandler);
+			EventManager.Instance.AddListener <OnPaintToolChangeEvent>(OnPaintToolChangeEventHandler);
 		}
 
 		void OnDisable ()
 		{
 			EventManager.Instance.RemoveListener <OnChangeColorEvent>(OnChangeColorEventHandler);
+			EventManager.Instance.RemoveListener <OnPaintToolChangeEvent>(OnPaintToolChangeEventHandler);
 		}
 
 		void Update ()
@@ -52,7 +56,12 @@ namespace DrawOn3DSurface.Controllers
 		{
 			brush.Color = eventDetails.Color;
 		}
-		
+
+		private void OnPaintToolChangeEventHandler (OnPaintToolChangeEvent eventDetails)
+		{
+			isErasing = eventDetails.ToolType == PaintToolType.Eraser;
+		}
+
 		#endregion
 	}
 }
