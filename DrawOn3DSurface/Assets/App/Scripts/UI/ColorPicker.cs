@@ -1,4 +1,3 @@
-using System;
 using DynamicBox.EventManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;

@@ -20,15 +20,9 @@ public class SurfaceController : MonoBehaviour
 		[SerializeField, Tooltip ("The property name of the main texture.")]
 		public string mainTextureName = "_MainTex";
 
-		[SerializeField, Tooltip ("Normal map texture property name.")]
-		public string normalTextureName = "_BumpMap";
-
 		[SerializeField, Tooltip ("Whether or not use main texture paint.")]
 		public bool useMainPaint = true;
 
-		[SerializeField, Tooltip ("Whether or not use normal map paint (you need material on normal maps).")]
-		public bool useNormalPaint = false;
-		
 		[HideInInspector]
 		[NonSerialized]
 		public Texture mainTexture;
@@ -39,41 +33,26 @@ public class SurfaceController : MonoBehaviour
 
 		[HideInInspector]
 		[NonSerialized]
-		public Texture normalTexture;
-
-		[HideInInspector]
-		[NonSerialized]
-		public RenderTexture paintNormalTexture;
-
-		[HideInInspector]
-		[NonSerialized]
 		public int mainTexturePropertyID;
-
-		[HideInInspector]
-		[NonSerialized]
-		public int normalTexturePropertyID;
 
 		public PaintSet ()
 		{
 		}
 
-		public PaintSet (string mainTextureName, string normalTextureName, bool useMainPaint, bool useNormalPaint)
+		public PaintSet (string mainTextureName, bool useMainPaint)
 		{
 			this.mainTextureName = mainTextureName;
-			this.normalTextureName = normalTextureName;
 			this.useMainPaint = useMainPaint;
-			this.useNormalPaint = useNormalPaint;
 		}
 
-		public PaintSet (string mainTextureName, string normalTextureName, bool useMainPaint, bool useNormalPaint,
-			Material material) : this (mainTextureName, normalTextureName, useMainPaint, useNormalPaint)
+		public PaintSet (string mainTextureName, bool useMainPaint, 
+			Material material) : this (mainTextureName, useMainPaint)
 		{
 			this.material = material;
 		}
 	}
 
 	private static Material paintMainMaterial = null;
-	private static Material paintNormalMaterial = null;
 	
 	[SerializeField] private Texture cleanTexture;
 
@@ -83,7 +62,6 @@ public class SurfaceController : MonoBehaviour
 	private int brushTexturePropertyID;
 	private int brushScalePropertyID;
 	private int brushColorPropertyID;
-	private int brushNormalTexturePropertyID;
 	private bool eraseFlag = false;
 
 	private const string COLOR_BLEND_USE_BRUSH = "INK_PAINTER_COLOR_BLEND_USE_BRUSH";
@@ -210,22 +188,18 @@ public class SurfaceController : MonoBehaviour
 		foreach (var p in paintSet)
 		{
 			p.mainTexturePropertyID = Shader.PropertyToID (p.mainTextureName);
-			p.normalTexturePropertyID = Shader.PropertyToID (p.normalTextureName);
 		}
 
 		paintUVPropertyID = Shader.PropertyToID ("_PaintUV");
 		brushTexturePropertyID = Shader.PropertyToID ("_Brush");
 		brushScalePropertyID = Shader.PropertyToID ("_BrushScale");
 		brushColorPropertyID = Shader.PropertyToID ("_ControlColor");
-		brushNormalTexturePropertyID = Shader.PropertyToID ("_BrushNormal");
 	}
 
 	private void SetMaterial ()
 	{
 		if (paintMainMaterial == null)
 			paintMainMaterial = new Material (Resources.Load<Material> ("Es.InkPainter.PaintMain"));
-		if (paintNormalMaterial == null)
-			paintNormalMaterial = new Material (Resources.Load<Material> ("Es.InkPainter.PaintNormal"));
 		var m = GetComponent<Renderer> ().materials;
 		for (int i = 0; i < m.Length; ++i)
 		{
@@ -240,8 +214,6 @@ public class SurfaceController : MonoBehaviour
 		{
 			if (p.material.HasProperty (p.mainTexturePropertyID))
 				p.mainTexture = p.material.GetTexture (p.mainTexturePropertyID);
-			if (p.material.HasProperty (p.normalTexturePropertyID))
-				p.normalTexture = p.material.GetTexture (p.normalTexturePropertyID);
 		}
 	}
 
@@ -276,9 +248,7 @@ public class SurfaceController : MonoBehaviour
 			if (RenderTexture.active != paint.paintMainTexture && paint.paintMainTexture != null &&
 			    paint.paintMainTexture.IsCreated ())
 				paint.paintMainTexture.Release ();
-			if (RenderTexture.active != paint.paintNormalTexture && paint.paintNormalTexture != null &&
-			    paint.paintNormalTexture.IsCreated ())
-				paint.paintNormalTexture.Release ();
+			
 		}
 	}
 
