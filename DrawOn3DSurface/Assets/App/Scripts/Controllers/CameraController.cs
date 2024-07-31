@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
     {
         HandleMovement();
 
-        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             HandleMouseRotation();
         }

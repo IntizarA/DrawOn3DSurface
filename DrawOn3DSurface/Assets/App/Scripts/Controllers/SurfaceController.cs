@@ -110,7 +110,7 @@ public class SurfaceController : MonoBehaviour
 	{
 		#region Test
 
-		if (Input.GetKeyDown (KeyCode.S))
+		if (Input.GetKeyDown (KeyCode.K))
 		{
 			Texture texture = GetComponent<MeshRenderer> ().material.mainTexture;
 
@@ -178,7 +178,6 @@ public class SurfaceController : MonoBehaviour
 		byte[] fileData = File.ReadAllBytes (filePath);
 
 		Texture2D texture = new Texture2D (2, 2, TextureFormat.RGBA32, false, true);
-
 		if (texture.LoadImage (fileData))
 		{
 			Debug.Log ("Texture loaded successfully.");
@@ -266,15 +265,6 @@ public class SurfaceController : MonoBehaviour
 					paint.paintMainTexture = SetupRenderTexture (paint.mainTexture, paint.mainTexturePropertyID, paint.material);
 				else
 					Debug.LogWarning ("To take advantage of the main texture paint must set main texture to materials.");
-			}
-
-			if (paint.useNormalPaint)
-			{
-				if (paint.normalTexture != null)
-					paint.paintNormalTexture =
-						SetupRenderTexture (paint.normalTexture, paint.normalTexturePropertyID, paint.material);
-				else
-					Debug.LogWarning ("To take advantage of the normal map paint must set normal map to materials.");
 			}
 		}
 	}
